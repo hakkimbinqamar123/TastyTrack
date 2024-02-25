@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Food Item</title>
+</head>
+<body>
+
+    <h1>Add Food Item</h1>
+
+    <form id="addFoodForm" action="/addFoodItem" method="post">
+        <label for="CategoryName">Category Name:</label>
+        <input type="text" id="CategoryName" name="CategoryName" required><br>
+
+        <label for="name">Food Item Name:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="img">Image URL:</label>
+        <input type="text" id="img" name="img" required><br>
+
+        <div id="optionsContainer">
+            <label for="options">Options:</label><br>
+            <div class="option">
+                <label for="optionType">Option Type:</label>
+                <input type="text" class="optionType" name="options[0][type]" required>
+
+                <label for="optionPrice">Option Price:</label>
+                <input type="text" class="optionPrice" name="options[0][price]" required><br>
+            </div>
+        </div>
+
+        <button type="button" onclick="addOption()">Add Option</button><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br>
+
+        <button type="submit">Add Food Item</button>
+    </form>
+
+    <script>
+        function addOption() {
+            const optionsContainer = document.getElementById('optionsContainer');
+            const newOption = document.createElement('div');
+            newOption.className = 'option';
+
+            const optionType = document.createElement('input');
+            optionType.type = 'text';
+            optionType.className = 'optionType';
+            optionType.name = `options[${optionsContainer.children.length}][type]`;
+            optionType.required = true;
+
+            const optionPrice = document.createElement('input');
+            optionPrice.type = 'text';
+            optionPrice.className = 'optionPrice';
+            optionPrice.name = `options[${optionsContainer.children.length}][price]`;
+            optionPrice.required = true;
+
+            newOption.appendChild(document.createElement('br'));
+            newOption.appendChild(document.createElement('br'));
+            newOption.appendChild(document.createTextNode('Option Type: '));
+            newOption.appendChild(optionType);
+            newOption.appendChild(document.createTextNode('Option Price: '));
+            newOption.appendChild(optionPrice);
+
+            optionsContainer.appendChild(newOption);
+        }
+
+        document.getElementById('addFoodForm').addEventListener('submit', function (event) {
+            const categoryName = document.getElementById('CategoryName').value;
+            const itemName = document.getElementById('name').value;
+            const imgUrl = document.getElementById('img').value;
+            const optionTypes = document.querySelectorAll('.optionType');
+            const optionPrices = document.querySelectorAll('.optionPrice');
+            const description = document.getElementById('description').value;
+
+            if (!categoryName || !itemName || !imgUrl || !description) {
+                alert('All fields are required');
+                event.preventDefault();
+            }
+
+            for (let i = 0; i < optionTypes.length; i++) {
+                if (!optionTypes[i].value || !optionPrices[i].value) {
+                    alert('All option fields are required');
+                    event.preventDefault();
+                    break;
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
