@@ -11,6 +11,8 @@ import { CartProvider } from './components/ContextReducer.js';
 import MyOrder from './screens/MyOrder.js';
 import Cart from './screens/Cart.js';
 import Profile from './screens/Profile.js';
+import Admin from './Admin/Admin.js';
+import AdminLogin from './Admin/AdminLogin.js';
 
 function App() {
   return (
@@ -23,6 +25,9 @@ function App() {
           <Route path='/myorder' element={<MyOrder />} />
           <Route path='/add-to-cart' element={<Cart />} />
           <Route path='/customerprofile' element={<Profile/>} />
+          <Route path='/admin/*' element={<Admin/>}/>
+          <Route path='/*' element={<Admin/>}/>
+          <Route path='/adminlogin' element={<AdminLogin/>}/>
         </Routes>
       </BrowserRouter>
     </CartProvider>

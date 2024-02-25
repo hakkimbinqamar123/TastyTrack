@@ -7,6 +7,21 @@ router.use(cors()); // Use CORS middleware for the router
 
 router.options('/add-to-cart', cors());
 
+
+// A route to get cart data
+router.get('/get-cart', async (req, res) => {
+    const { email } = req.query;
+
+    try {
+        const cart = await Cart.findOne({ email });
+        res.json({ success: true, cart });
+    } catch (error) {
+        console.error('Error getting cart data:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
+    }
+});
+
+
 router.post('/add-to-cart', async (req, res) => {
     const { email, name, qty, size, price } = req.body;
 
@@ -59,9 +74,9 @@ router.post('/add-to-cart', async (req, res) => {
         }
 
         res.json({ success: true });
-    }  catch (error) {
+    } catch (error) {
         console.error('Error in /api/add-to-cart:', error);
-        
+
         if (error.name === 'ValidationError') {
             const errors = Object.values(error.errors).map(err => err.message);
             res.status(400).json({ success: false, message: 'Validation Error', errors });
@@ -111,6 +126,8 @@ router.post('/remove-from-cart', async (req, res) => {
             // Remove the item from the cart
             cart.items = cart.items.filter(item => !(item.name === name && item.size === size));
             await cart.save();
+
+            // Send a success response to the client
             res.json({ success: true });
         } else {
             res.status(404).json({ success: false, message: 'Cart not found' });
@@ -120,5 +137,6 @@ router.post('/remove-from-cart', async (req, res) => {
         res.status(500).send("Server Error: " + error.message);
     }
 });
+
 
 module.exports = router;
