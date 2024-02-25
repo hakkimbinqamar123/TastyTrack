@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 app.use('/api', require("./Routes/CreateUser"))
-app.use('/api', require("./Routes/DisplayData"))
+app.use('/api', require("./Routes/ProductData"))
 app.use('/api', require("./Routes/OrderData"))
 app.use('/api', require("./Routes/CartRoute"))
 app.use('/api', require("./Routes/AdminRoute"))
