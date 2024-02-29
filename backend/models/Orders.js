@@ -12,6 +12,11 @@ const OrderSchema = new Schema({
         type: Array,
         required: true,
     },
+    status: {
+        type: String,
+        enum: ['pending', 'processing', 'delivered'],
+        default: 'pending'
+    }
 })
 
 module.exports = mongoose.model('order', OrderSchema)

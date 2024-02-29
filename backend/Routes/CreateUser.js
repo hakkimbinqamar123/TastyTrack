@@ -103,4 +103,16 @@ router.post('/customerprofile', async (req, res) => {
   }
 });
 
+//view all customers
+router.post('/viewallcustomers', async (req, res) => {
+  try {
+    const allCustomers = await User.find({});
+    console.log("customers: ", allCustomers)
+    res.json(allCustomers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ errors: 'Server error' });
+  }
+});
+
 module.exports = router;
