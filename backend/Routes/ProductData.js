@@ -11,7 +11,7 @@ app.use(cors());
 
 router.post('/foodData', (req, res) => {
     try {
-        console.log(global.food_items)
+        // console.log(global.food_items)
         res.send([global.food_items, global.foodCategory])
     } catch (error) {
         console.error(error.message)
@@ -26,15 +26,17 @@ router.post(
         body('name', 'Name is required').not().isEmpty(),
         body('CategoryName', 'Category Name is required').not().isEmpty(),
         body('img', 'Image URL is required').not().isEmpty(),
+        body('options.*', 'Option is required').isObject().notEmpty(),
         body('options.*.type', 'Option type is required').not().isEmpty(),
         body('options.*.price', 'Option price is required').not().isEmpty(),
+
     ],
 
     async (req, res) => {
         const adminKey = req.headers['adminkey'];
-        const authToken = req.headers['authorization'];
-        console.log(adminKey)
-        console.log(authToken)
+        const authToken = req.headers['token'];
+        // console.log(adminKey)
+        // console.log(authToken)
 
         // Check if admin key and token are present
         if (!adminKey || !authToken) {
@@ -83,7 +85,7 @@ router.post(
 
             return res.status(200).json({ success: true, message: 'Food Item added successfully' });
         } catch (error) {
-            console.log(error);
+            console.error('Error adding food item:', error);
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     }
@@ -97,13 +99,15 @@ router.post(
         body('name', 'Name is required').not().isEmpty(),
         body('CategoryName', 'Category Name is required').not().isEmpty(),
         body('img', 'Image URL is required').not().isEmpty(),
+        body('options.*', 'Option is required').isObject().notEmpty(),
         body('options.*.type', 'Option type is required').not().isEmpty(),
         body('options.*.price', 'Option price is required').not().isEmpty(),
+
     ],
 
     async (req, res) => {
         const adminKey = req.headers['adminkey'];
-        const authToken = req.headers['authorization'];
+        const authToken = req.headers['token'];
         const itemId = req.body.item_id;
 
         // Check if admin key and token are present
@@ -191,5 +195,44 @@ router.post('/deleteFoodItem', async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
+
+// View a specific food item route
+router.post('/viewOneFoodItem', async (req, res) => {
+    const adminKey = req.headers['adminkey'];
+    const authToken = req.headers['token'];
+    const itemId = req.body.item_id;
+
+    // Check if admin key and token are present
+    if (!adminKey || !authToken) {
+        return res.status(401).json({ success: false, message: 'Unauthorized user' });
+    }
+
+    try {
+        // Verify admin key
+        if (adminKey !== 'adminkey') {
+            return res.status(401).json({ success: false, message: 'Unauthorized user' });
+        }
+
+        // Verify token
+        const decoded = jwt.verify(authToken, 'adminkey');
+        if (!decoded || decoded.id !== req.body.id) {
+            return res.status(401).json({ success: false, message: 'Unauthorized user' });
+        }
+
+        // Check if the food item exists
+        const existingItem = await FoodItems.findById(itemId);
+        console.log("existing items: ", existingItem)
+        if (!existingItem) {
+            return res.status(404).json({ success: false, message: "Food Item not found" });
+        }
+
+        // Return the data of the selected food item
+        res.status(200).json({ success: true, data: existingItem });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
+
 
 module.exports = router;
