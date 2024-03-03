@@ -7,25 +7,33 @@ router.use(cors()); // Use CORS middleware for the router
 
 router.options('/add-to-cart', cors());
 
+router.use(cors({
+    origin: 'http://localhost:3000', // Adjust the origin to match your client's URL
+    credentials: true,
+}));
 
-// A route to get cart data
-router.get('/get-cart', async (req, res) => {
-    const { email } = req.query;
+router.post('/get-cart', async (req, res) => {
+    const { email } = req.body;
 
     try {
         const cart = await Cart.findOne({ email });
-        res.json({ success: true, cart });
+
+        if (cart) {
+            res.json({ success: true, cart });
+        } else {
+            console.log("Cart not found for email:", email);
+            res.json({ success: false, message: 'Cart not found for the specified email' });
+        }
     } catch (error) {
         console.error('Error getting cart data:', error);
         res.status(500).json({ success: false, message: 'Internal Server Error', error: error.message });
     }
 });
 
-
 router.post('/add-to-cart', async (req, res) => {
-    const { email, name, qty, size, price } = req.body;
+    const { email, name, qty, size, price, img } = req.body;
 
-    console.log("Received data in /add-to-cart:", req.body);
+    // console.log("Received data in /add-to-cart:", req.body);
 
 
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -44,7 +52,8 @@ router.post('/add-to-cart', async (req, res) => {
                     name: req.body.name,
                     qty: req.body.qty,
                     size: req.body.size,
-                    price: req.body.price
+                    price: req.body.price,
+                    img: req.body.img
                 }]
             });
             console.log(cart)
@@ -66,7 +75,8 @@ router.post('/add-to-cart', async (req, res) => {
                     name,
                     qty: parseInt(qty),
                     size,
-                    price: parseFloat(price)
+                    price: parseFloat(price),
+                    img
                 });
             }
 
