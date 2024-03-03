@@ -57,7 +57,6 @@ router.post('/myorderData', async (req, res) => {
 
 router.post('/allOrderData', async (req, res) => {
     try {
-        // Fetch all orders
         const allOrders = await Order.find({});
         console.log("all orders: ", allOrders)
         res.json({ allOrders });
