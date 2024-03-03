@@ -14,21 +14,13 @@ const menuSchema = new mongoose.Schema({
         required: true
     },
     options: [{
-        half: {
+        type: {
             type: String,
             required: true
         },
-        full: {
-            type: String
-        },
-        regular: {
-            type: String
-        },
-        medium: {
-            type: String
-        },
-        large: {
-            type: String
+        price: {
+            type: String,
+            required: true
         }
     }],
     description: {
@@ -37,6 +29,6 @@ const menuSchema = new mongoose.Schema({
     }
 });
 
-const Menu = mongoose.model('Menu', menuSchema);
+const Food_item = mongoose.model('food_item', menuSchema);
 
-module.exports = Menu;
+module.exports = Food_item;
