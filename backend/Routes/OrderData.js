@@ -10,7 +10,7 @@ app.use(cors());
 
 router.post('/orderData', async (req, res) => {
     let data = req.body.order_data;
-    data.unshift({ Order_date: req.body.order_date });  // Use unshift to add at the beginning
+    data.unshift({ Order_date: req.body.order_date });
 
     try {
         let existingOrder = await Order.findOne({ 'email': req.body.email });
@@ -19,25 +19,21 @@ router.post('/orderData', async (req, res) => {
             const newOrder = new Order({
                 email: req.body.email,
                 order_data: [data],
-                status: req.body.status ? req.body.status : "pending"
+                status: req.body.status ? req.body.status : "pending",
+                deliveryAddress: req.body.deliveryAddress, // Include delivery address in the order schema
             });
+            console.log(newOrder)
 
-            // Save the new order to generate a unique _id
             await newOrder.save();
-
-            // Clear the cart data in the database as well
-            // Assuming you have a separate model for the cart data
-            // Adjust the following line based on your actual model structure
             await CartModel.deleteOne({ 'email': req.body.email });
 
             res.json({ success: true });
         } else {
-            await Order.findOneAndUpdate({ email: req.body.email },
-                { $push: { order_data: data } });
+            await Order.findOneAndUpdate(
+                { email: req.body.email },
+                { $push: { order_data: data }, deliveryAddress: req.body.deliveryAddress }
+            );
 
-            // Clear the cart data in the database as well
-            // Assuming you have a separate model for the cart data
-            // Adjust the following line based on your actual model structure
             await CartModel.deleteOne({ 'email': req.body.email });
 
             res.json({ success: true });
@@ -52,7 +48,7 @@ router.post('/orderData', async (req, res) => {
 
 router.post('/myorderData', async (req, res) => {
     try {
-        let myData = await Order.findOne({'email': req.body.email});
+        let myData = await Order.findOne({ 'email': req.body.email });
         res.json({ orderData: myData });
     } catch (error) {
         res.status(500).send("Server Error: " + error.message);
@@ -71,12 +67,16 @@ router.post('/allOrderData', async (req, res) => {
 });
 
 router.post('/updateOrderStatus', async (req, res) => {
-    const orderId = req.body._id
+    const orderId = req.body.orderId; // Change _id to orderId
+    const itemId = req.body.itemId; // Add itemId
     const newStatus = req.body.status;
 
     try {
-        // Update the order status in the database
-        await Order.findOneAndUpdate({ _id: orderId }, { $set: { status: newStatus } });
+        // Update the specific item's status in the order_data array
+        await Order.findOneAndUpdate(
+            { _id: orderId, 'order_data._id': itemId }, // Find the order with the given orderId and the item with the given itemId
+            { $set: { 'order_data.$.status': newStatus } } // Update the status of the matched item
+        );
 
         res.json({ success: true });
     } catch (error) {
@@ -84,6 +84,5 @@ router.post('/updateOrderStatus', async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
-
 
 module.exports = router;
