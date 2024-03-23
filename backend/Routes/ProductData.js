@@ -234,5 +234,20 @@ router.post('/viewOneFoodItem', async (req, res) => {
     }
 });
 
+// Route to fetch the total number of food items
+router.post('/totalFoodItems', async (req, res) => {
+    try {
+        // Query the database to count the total number of food items
+        const totalItemsCount = await FoodItems.countDocuments();
+        console.log("total items: ", totalItemsCount)
+        
+        // Send the total count as a response
+        res.status(200).json({ success: true, totalItemsCount });
+    } catch (error) {
+        console.error('Error fetching total food items:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+});
+
 
 module.exports = router;

@@ -56,14 +56,45 @@ const ProductTable = () => {
     setPage(0);
   };
 
-  const handleDelete = (itemId) => {
-    // Implement the logic to delete the item with the given itemId
-    console.log(`Delete item with ID ${itemId}`);
+  const handleDelete = async (itemId) => {
+    try {
+      const adminKey = sessionStorage.getItem('adminkey');
+      const token = sessionStorage.getItem('token');
+
+      if (!adminKey || !token) {
+        // Redirect to login page or handle unauthorized access
+        console.log("Unauthorized user");
+        navigate("/adminlogin");
+        return;
+      }
+
+      const response = await fetch(`http://localhost:5000/api/deleteFoodItem`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'adminkey': adminKey,
+          'token': token,
+        },
+        body: JSON.stringify({ item_id: itemId }),
+      });
+
+      if (response.ok) {
+        alert("Deleted Successfully!");
+        console.log("Food Item deleted successfully");
+        window.location.reload();
+      } else {
+        console.error("Failed to delete food item");
+      }
+    } catch (error) {
+      console.error("Error deleting food item:", error);
+    }
   };
 
   const handleUpdate = (itemId) => {
-    // Implement the logic to update the item with the given itemId
-    console.log(`Update item with ID ${itemId}`);
+    let data = itemId;
+    console.log("item data: ", data)
+    sessionStorage.setItem("item_id", data);
+    navigate("/product/update");
   };
 
   // Check for admin key and token
@@ -120,14 +151,15 @@ const ProductTable = () => {
                 </TableCell>
                 <TableCell align="right">{item.CategoryName}</TableCell>
                 <TableCell align="right">
-                  {item.options && item.options[0] && (
-                    <span>
-                      {item.options[0].half && `Half: $${item.options[0].half} | `}
-                      {item.options[0].full && `Full: $${item.options[0].full} | `}
-                      {item.options[0].regular && `Regular: $${item.options[0].regular} | `}
-                      {item.options[0].medium && `Medium: $${item.options[0].medium} | `}
-                      {item.options[0].large && `Large: $${item.options[0].large}`}
-                    </span>
+                  {item.options && item.options.length > 0 && (
+                    <div>
+                      {item.options.map((data, index) => (
+                        <div key={index}>
+                          {data.type && <span>{data.type} | </span>}
+                          {data.price && <span>Price: {data.price}</span>}
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </TableCell>
                 <TableCell align="right">
