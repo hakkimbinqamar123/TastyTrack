@@ -13,6 +13,8 @@ import Cart from './screens/Cart.js';
 import Profile from './screens/Profile.js';
 import Admin from './Admin/Admin.js';
 import AdminLogin from './Admin/AdminLogin.js';
+import Checkout from './screens/Checkout.js';
+import ContactUs from './screens/ContactUs.js';
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route path='/admin/*' element={<Admin/>}/>
           <Route path='/*' element={<Admin/>}/>
           <Route path='/adminlogin' element={<AdminLogin/>}/>
+          <Route path='/checkout' element={<Checkout/>}/>
+          <Route path='/contactus' element={<ContactUs/>}/>
         </Routes>
       </BrowserRouter>
     </CartProvider>
