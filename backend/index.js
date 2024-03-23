@@ -22,6 +22,9 @@ app.use('/api', require("./Routes/OrderData"))
 app.use('/api', require("./Routes/CartRoute"))
 app.use('/api', require("./Routes/AdminRoute"))
 app.use('/api', require("./Routes/PaymentRoute"))
+app.use('/api', require("./Routes/RatingRoute"))
+app.use('/api', require("./Routes/MessageRoute"))
+app.use('/api', require("./Routes/CategoryRoute"))
 
 
 app.listen(port, () => {

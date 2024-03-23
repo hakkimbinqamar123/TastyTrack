@@ -3,6 +3,7 @@ import React from 'react'
 import Achivements from './Achivements'
 import MonthlyOverview from './MonthlyOverview'
 import ProductTable from './ProductTable'
+import OrdersTable from './OrdersTable'
 
 const AdminDashboard = () => {
     return (
@@ -14,8 +15,8 @@ const AdminDashboard = () => {
                 <Grid item xs={12} md={8}>
                     <MonthlyOverview />
                 </Grid>
-                <Grid item xs={6} md={6}>
-                   
+                <Grid item xs={12} md={12}>
+                   <OrdersTable/>
                 </Grid>
             </Grid>
         </div>

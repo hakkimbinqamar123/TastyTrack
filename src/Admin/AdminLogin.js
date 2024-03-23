@@ -42,21 +42,56 @@ export default function Login() {
         setCredentials({ ...credentials, [event.target.name]: event.target.value });
     }
     return (
-        <div>
-            <div class="container">
-                <form onSubmit={handleSubmit}>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" name='username' value={credentials.username} onChange={onChange} />
-                        <div id="username" class="form-text">We'll never share your username with anyone else.</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" name='password' value={credentials.password} onChange={onChange} />
-                    </div>
-                    <button type="submit" onClick={handleSubmit} class="m-3 btn btn-success">Login</button>
-                </form>
+        <>
+  <br />
+  <div className="container d-flex justify-content-center align-items-center">
+    <div class="card" style={{ width: '30rem' }}>
+      {/* You can replace the image source and alt text accordingly */}
+      <img src="https://hdwallpaperim.com/wp-content/uploads/2017/08/31/155931-food.jpg" class="card-img-top" alt="Card Image" />
+      <div class="card-body">
+        <h5 class="card-title">Login</h5>
+        <form onSubmit={handleSubmit}>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">
+              Username
+            </label>
+            <input
+              type="username"
+              class="form-control"
+              id="username"
+              aria-describedby="emailHelp"
+              name="username"
+              value={credentials.username}
+              onChange={onChange}
+            />
+            <div id="emailHelp" class="form-text">
+              We'll never share your details with anyone else.
             </div>
-        </div>
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">
+              Password
+            </label>
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              name="password"
+              value={credentials.password}
+              onChange={onChange}
+            />
+          </div>
+          <button type="submit" class="m-3 btn btn-success">
+            Login
+          </button>
+          <Link to="/" class="m-3 btn btn-dark">
+            Home
+          </Link>
+        </form>
+      </div>
+    </div>
+  </div>
+</>
+
     )
 }

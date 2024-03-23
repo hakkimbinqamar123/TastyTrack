@@ -21,7 +21,7 @@ router.post('/get-cart', async (req, res) => {
         if (cart) {
             res.json({ success: true, cart });
         } else {
-            console.log("Cart not found for email:", email);
+            // console.log("Cart not found for email:", email);
             res.json({ success: false, message: 'Cart not found for the specified email' });
         }
     } catch (error) {
@@ -42,7 +42,7 @@ router.post('/add-to-cart', async (req, res) => {
 
     try {
         let cart = await Cart.findOne({ email });
-        console.log("cart data: ", cart)
+        // console.log("cart data: ", cart)
 
         if (!cart) {
             // If the user's cart doesn't exist, create a new cart

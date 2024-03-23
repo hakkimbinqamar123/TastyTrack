@@ -23,12 +23,12 @@ router.post('/payment', async (req, res) => {
             key_secret: process.env.RAZORPAY_SECRET,
         });
 
-        console.log('RAZORPAY_KEY_ID:', process.env.RAZORPAY_KEY_ID);
-        console.log('RAZORPAY_SECRET:', process.env.RAZORPAY_SECRET);
+        // console.log('RAZORPAY_KEY_ID:', process.env.RAZORPAY_KEY_ID);
+        // console.log('RAZORPAY_SECRET:', process.env.RAZORPAY_SECRET);
 
 
         const options = req.body;
-        console.log('Payment options:', options);
+        // console.log('Payment options:', options);
 
         const order = await instance.orders.create(options);
 
@@ -37,7 +37,7 @@ router.post('/payment', async (req, res) => {
             return res.status(500).send('Error creating Razorpay order');
         }
 
-        console.log('Razorpay order response:', order);
+        // console.log('Razorpay order response:', order);
         res.json(order);
     } catch (error) {
         console.error('Error creating Razorpay order:', error);
@@ -65,7 +65,7 @@ router.post('/verify-payment', async (req, res) => {
             status: "success",
             amount: req.body.amount,
         };
-        console.log(paymentData)
+        // console.log(paymentData)
 
         const savedPayment = await Payment.create(paymentData);
 
